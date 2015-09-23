@@ -39,6 +39,8 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     private String mScanFormat = "Format:";
     private String mScanContents = "Contents:";
 
+    private String scannedEan;
+
 
 
     public AddBook(){
@@ -53,7 +55,16 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        if(savedInstanceState != null) {
+            scannedEan = savedInstanceState.getString("ean", null);
+        }
 
         rootView = inflater.inflate(R.layout.fragment_add_book, container, false);
         ean = (EditText) rootView.findViewById(R.id.ean);
@@ -61,7 +72,9 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         ean.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                //no need
+                if(scannedEan != null){
+                    ean.setText(scannedEan);
+                }
             }
 
             @Override
@@ -73,8 +86,13 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
             public void afterTextChanged(Editable s) {
 
                 //Handling of error case- does the device have an internet connection?
-                if(isNetworkAvailable()) {
-                    String ean = s.toString();
+                if(Utility.isNetworkAvailable(getActivity())) {
+                    String ean;
+                    if(scannedEan== null) {
+                        ean = s.toString();
+                    } else {
+                        ean = scannedEan;
+                    }
                     //catch isbn10 numbers
                     if (ean.length() == 10 && !ean.startsWith("978")) {
                         ean = "978" + ean;
@@ -110,14 +128,15 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
                 // Hint: Use a Try/Catch block to handle the Intent dispatch gracefully, if you
                 // are using an external app.
                 //when you're done, remove the toast below.
-                /**Context context = getActivity();
-                CharSequence text = "This button should let you scan a book for its barcode!";
-                int duration = Toast.LENGTH_SHORT;
 
-                Toast toast = Toast.makeText(context, text, duration);
-                toast.show();**/
-                Intent cameraIntent = new Intent(getActivity(), CameraActivity.class);
-                startActivity(cameraIntent);
+
+                //Check for internet connectivity before launching barcode scanner
+                if(Utility.isNetworkAvailable(getActivity())) {
+                    Intent cameraIntent = new Intent(getActivity(), CameraActivity.class);
+                    startActivity(cameraIntent);
+                } else {
+                    Toast.makeText(getActivity(), "Please enable internet connectivity, scanner will not work otherwise.", Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
@@ -148,14 +167,9 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         return rootView;
     }
 
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
 
-    private void restartLoader(){
+
+    public void restartLoader(){
         getLoaderManager().restartLoader(LOADER_ID, null, this);
     }
 
@@ -205,6 +219,8 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
 
         rootView.findViewById(R.id.save_button).setVisibility(View.VISIBLE);
         rootView.findViewById(R.id.delete_button).setVisibility(View.VISIBLE);
+
+        data.close();
     }
 
     @Override

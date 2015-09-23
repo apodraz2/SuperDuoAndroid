@@ -1,10 +1,17 @@
 package it.jaschke.alexandria;
 
+
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.LoaderManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -14,6 +21,7 @@ import android.widget.Toast;
 
 import com.google.zxing.Result;
 
+import it.jaschke.alexandria.services.BookService;
 import me.dm7.barcodescanner.core.IViewFinder;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 import me.dm7.barcodescanner.core.ViewFinderView;
@@ -75,9 +83,31 @@ public class CameraActivity extends ActionBarActivity implements ZXingScannerVie
 
     @Override
     public void handleResult(Result result) {
-        Toast.makeText(this, "Contents = " + result.getText() +
-                ", Format = " + result.getBarcodeFormat().toString(), Toast.LENGTH_SHORT).show();
-        mScannerView.startCamera();
+        //Just in case, check for internet connectivity before adding book to database
+        if(Utility.isNetworkAvailable(this)) {
+            Toast.makeText(this, "Book added to library", Toast.LENGTH_SHORT).show();
+
+            Intent bookIntent = new Intent(this, BookService.class);
+            bookIntent.putExtra(BookService.EAN, result.getText());
+            bookIntent.setAction(BookService.FETCH_BOOK);
+            this.startService(bookIntent);
+
+            /**Bundle data = new Bundle();
+            data.putString("ean", result.getText());
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            android.support.v4.app.Fragment nextFragment = new AddBook();
+            nextFragment.setArguments(data);
+
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, nextFragment)
+                    .commit();**/
+
+            onBackPressed();
+        } else {
+            Toast.makeText(this, "Please enable internet connectivity.", Toast.LENGTH_SHORT).show();
+            mScannerView.startCamera();
+        }
     }
 
     private static class CustomViewFinderView extends ViewFinderView {
@@ -101,21 +131,7 @@ public class CameraActivity extends ActionBarActivity implements ZXingScannerVie
         @Override
         public void onDraw(Canvas canvas) {
             super.onDraw(canvas);
-            drawTradeMark(canvas);
-        }
-
-        private void drawTradeMark(Canvas canvas) {
-            Rect framingRect = getFramingRect();
-            float tradeMarkTop;
-            float tradeMarkLeft;
-            if (framingRect != null) {
-                tradeMarkTop = framingRect.bottom + PAINT.getTextSize() + 10;
-                tradeMarkLeft = framingRect.left;
-            } else {
-                tradeMarkTop = 10;
-                tradeMarkLeft = canvas.getHeight() - PAINT.getTextSize() - 10;
-            }
-            canvas.drawText(TRADE_MARK_TEXT, tradeMarkLeft, tradeMarkTop, PAINT);
+            //drawTradeMark(canvas);
         }
     }
 }
