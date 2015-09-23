@@ -85,25 +85,18 @@ public class CameraActivity extends ActionBarActivity implements ZXingScannerVie
     public void handleResult(Result result) {
         //Just in case, check for internet connectivity before adding book to database
         if(Utility.isNetworkAvailable(this)) {
-            Toast.makeText(this, "Book added to library", Toast.LENGTH_SHORT).show();
+            /**Toast.makeText(this, "Book added to library", Toast.LENGTH_SHORT).show();
 
             Intent bookIntent = new Intent(this, BookService.class);
             bookIntent.putExtra(BookService.EAN, result.getText());
             bookIntent.setAction(BookService.FETCH_BOOK);
-            this.startService(bookIntent);
+            this.startService(bookIntent);**/
 
-            /**Bundle data = new Bundle();
-            data.putString("ean", result.getText());
 
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            android.support.v4.app.Fragment nextFragment = new AddBook();
-            nextFragment.setArguments(data);
-
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, nextFragment)
-                    .commit();**/
-
-            onBackPressed();
+            Intent finishIntent = new Intent();
+            finishIntent.putExtra("ean", result.getText());
+            setResult(RESULT_OK, finishIntent);
+            finish();
         } else {
             Toast.makeText(this, "Please enable internet connectivity.", Toast.LENGTH_SHORT).show();
             mScannerView.startCamera();

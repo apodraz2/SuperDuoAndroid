@@ -30,6 +30,7 @@ import it.jaschke.alexandria.services.DownloadImage;
 public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TAG = "INTENT_TO_SCAN_ACTIVITY";
     private EditText ean;
+    private String eanString;
     private final int LOADER_ID = 1;
     private View rootView;
     private final String EAN_CONTENT="eanContent";
@@ -62,19 +63,13 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        if(savedInstanceState != null) {
-            scannedEan = savedInstanceState.getString("ean", null);
-        }
-
         rootView = inflater.inflate(R.layout.fragment_add_book, container, false);
         ean = (EditText) rootView.findViewById(R.id.ean);
 
         ean.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if(scannedEan != null){
-                    ean.setText(scannedEan);
-                }
+
             }
 
             @Override
@@ -87,26 +82,24 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
 
                 //Handling of error case- does the device have an internet connection?
                 if(Utility.isNetworkAvailable(getActivity())) {
-                    String ean;
-                    if(scannedEan== null) {
-                        ean = s.toString();
-                    } else {
-                        ean = scannedEan;
-                    }
+                    String eanString = s.toString();
+
+
                     //catch isbn10 numbers
-                    if (ean.length() == 10 && !ean.startsWith("978")) {
-                        ean = "978" + ean;
+                    if (eanString.length() == 10 && !eanString.startsWith("978")) {
+                        eanString = "978" + ean;
                     }
-                    if (ean.length() < 13) {
+                    if (eanString.length() < 13) {
                         clearFields();
                         return;
                     }
                     //Once we have an ISBN, start a book intent
                     Intent bookIntent = new Intent(getActivity(), BookService.class);
-                    bookIntent.putExtra(BookService.EAN, ean);
+                    bookIntent.putExtra(BookService.EAN, eanString);
                     bookIntent.setAction(BookService.FETCH_BOOK);
                     getActivity().startService(bookIntent);
                     AddBook.this.restartLoader();
+
                 } else {
                     Context context = getActivity();
                     CharSequence text = "Please enable internet connectivity and try again.";
@@ -133,7 +126,8 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
                 //Check for internet connectivity before launching barcode scanner
                 if(Utility.isNetworkAvailable(getActivity())) {
                     Intent cameraIntent = new Intent(getActivity(), CameraActivity.class);
-                    startActivity(cameraIntent);
+
+                    startActivityForResult(cameraIntent, 1);
                 } else {
                     Toast.makeText(getActivity(), "Please enable internet connectivity, scanner will not work otherwise.", Toast.LENGTH_SHORT).show();
                 }
@@ -167,7 +161,15 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         return rootView;
     }
 
-
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(data != null) {
+            scannedEan = data.getStringExtra("ean");
+            ean.setText(scannedEan);
+            this.restartLoader();
+        }
+    }
 
     public void restartLoader(){
         getLoaderManager().restartLoader(LOADER_ID, null, this);
@@ -220,7 +222,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         rootView.findViewById(R.id.save_button).setVisibility(View.VISIBLE);
         rootView.findViewById(R.id.delete_button).setVisibility(View.VISIBLE);
 
-        data.close();
+
     }
 
     @Override
