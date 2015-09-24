@@ -17,6 +17,18 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true">
 
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/search_button_ean"
+                android:src="@drawable/ic_action_search"
+                android:contentDescription="@string/search"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_marginTop="5dp"
+                android:layout_alignParentEnd="true"/>
+
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

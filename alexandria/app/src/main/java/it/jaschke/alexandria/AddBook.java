@@ -17,7 +17,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,15 +32,12 @@ import it.jaschke.alexandria.services.DownloadImage;
 public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TAG = "INTENT_TO_SCAN_ACTIVITY";
     private EditText ean;
+    private ImageButton eanSearchButton;
     private String eanString;
     private final int LOADER_ID = 1;
     private View rootView;
     private final String EAN_CONTENT="eanContent";
-    private static final String SCAN_FORMAT = "scanFormat";
-    private static final String SCAN_CONTENTS = "scanContents";
 
-    private String mScanFormat = "Format:";
-    private String mScanContents = "Contents:";
 
     private String scannedEan;
 
@@ -52,6 +51,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         super.onSaveInstanceState(outState);
         if(ean!=null) {
             outState.putString(EAN_CONTENT, ean.getText().toString());
+            //this.restartLoader();
         }
     }
 
@@ -61,28 +61,24 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+
+    }
+
+    @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.fragment_add_book, container, false);
         ean = (EditText) rootView.findViewById(R.id.ean);
+        eanSearchButton = (ImageButton) rootView.findViewById(R.id.search_button_ean);
 
-        ean.addTextChangedListener(new TextWatcher() {
+        eanSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //no need
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
+            public void onClick(View view) {
                 //Handling of error case- does the device have an internet connection?
-                if(Utility.isNetworkAvailable(getActivity())) {
-                    String eanString = s.toString();
+                if (Utility.isNetworkAvailable(getActivity())) {
+                    String eanString = ean.getText().toString();
 
 
                     //catch isbn10 numbers
@@ -91,6 +87,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
                     }
                     if (eanString.length() < 13) {
                         clearFields();
+                        Toast.makeText(getActivity(), R.string.reenter_ean, Toast.LENGTH_SHORT).show();
                         return;
                     }
                     //Once we have an ISBN, start a book intent
@@ -102,7 +99,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
 
                 } else {
                     Context context = getActivity();
-                    CharSequence text = "Please enable internet connectivity and try again.";
+                    String text = context.getString(R.string.enable_connectivity);
                     int duration = Toast.LENGTH_SHORT;
 
                     Toast toast = Toast.makeText(context, text, duration);
@@ -129,7 +126,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
 
                     startActivityForResult(cameraIntent, 1);
                 } else {
-                    Toast.makeText(getActivity(), "Please enable internet connectivity, scanner will not work otherwise.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.enable_connectivity, Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -138,18 +135,36 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         rootView.findViewById(R.id.save_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ean.setText("");
+
+                if(ean.getText().length() == 0) {
+                    Toast.makeText(getActivity(), R.string.empty_search_box, Toast.LENGTH_SHORT).show();
+                    clearFields();
+                } else {
+                    ean.setText("");
+                    Toast.makeText(getActivity(), R.string.book_added, Toast.LENGTH_SHORT).show();
+                    clearFields();
+                }
             }
         });
 
         rootView.findViewById(R.id.delete_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent bookIntent = new Intent(getActivity(), BookService.class);
-                bookIntent.putExtra(BookService.EAN, ean.getText().toString());
-                bookIntent.setAction(BookService.DELETE_BOOK);
-                getActivity().startService(bookIntent);
-                ean.setText("");
+                //error case, if the search box is empty
+                if(ean.getText().toString().length() == 0) {
+
+                    Toast.makeText(getActivity(), R.string.empty_search_box, Toast.LENGTH_SHORT).show();
+                    clearFields();
+                    return;
+                } else {
+                    Intent bookIntent = new Intent(getActivity(), BookService.class);
+                    bookIntent.putExtra(BookService.EAN, ean.getText().toString());
+                    bookIntent.setAction(BookService.DELETE_BOOK);
+                    getActivity().startService(bookIntent);
+                    ean.setText("");
+                    Toast.makeText(getActivity(), R.string.book_not_added, Toast.LENGTH_SHORT).show();
+                    clearFields();
+                }
             }
         });
 
@@ -222,6 +237,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         rootView.findViewById(R.id.save_button).setVisibility(View.VISIBLE);
         rootView.findViewById(R.id.delete_button).setVisibility(View.VISIBLE);
 
+        //data.close();
 
     }
 

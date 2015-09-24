@@ -26,8 +26,16 @@
     <string name="share_text">A must read book: </string>
 
 <!-- TODO: Remove or change this placeholder text -->
-    <string name="about_text">This application gets book information from a Google API. All titles, cover images, and author information come from there.
+    <string translatable="true" name="about_text">This application gets book information from a Google API. All titles, cover images, and author information come from there.
     The original version of this app was built by Sascha Jaschke, and a modified version is given to students in the Udacity Android Nanodegree program. </string>
-    <string name="title_activity_camera">CameraActivity</string>
-    <string name="hello_world">Hello world!</string>
+    <string translatable="false" name="title_activity_camera">CameraActivity</string>
+
+
+    <!-- Toast strings -->
+    <string name="reenter_ean">EAN was not long enough, please check again.</string>
+    <string name="enable_connectivity">Please enable internet connectivity and try again.</string>
+    <string name="empty_search_box">Seach box was empty.</string>
+    <string name="book_added">Book was added to your library.</string>
+    <string name="book_not_added">Book was not added to your library.</string>
+    <string name="book_deleted">Book was deleted from your inventory.</string>
 </resources>

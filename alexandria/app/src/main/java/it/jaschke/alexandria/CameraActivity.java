@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -85,12 +84,6 @@ public class CameraActivity extends ActionBarActivity implements ZXingScannerVie
     public void handleResult(Result result) {
         //Just in case, check for internet connectivity before adding book to database
         if(Utility.isNetworkAvailable(this)) {
-            /**Toast.makeText(this, "Book added to library", Toast.LENGTH_SHORT).show();
-
-            Intent bookIntent = new Intent(this, BookService.class);
-            bookIntent.putExtra(BookService.EAN, result.getText());
-            bookIntent.setAction(BookService.FETCH_BOOK);
-            this.startService(bookIntent);**/
 
 
             Intent finishIntent = new Intent();
@@ -98,13 +91,12 @@ public class CameraActivity extends ActionBarActivity implements ZXingScannerVie
             setResult(RESULT_OK, finishIntent);
             finish();
         } else {
-            Toast.makeText(this, "Please enable internet connectivity.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.enable_connectivity, Toast.LENGTH_SHORT).show();
             mScannerView.startCamera();
         }
     }
 
     private static class CustomViewFinderView extends ViewFinderView {
-        public static final String TRADE_MARK_TEXT = "ZXing";
         public static final int TRADE_MARK_TEXT_SIZE_SP = 40;
         public final Paint PAINT = new Paint();
 
