@@ -65,22 +65,33 @@ public class Utilies
         }
     }
 
+    public static String getPreferredTeam() {
+        return "Manchester City FC";
+    }
+
     public static int getTeamCrestByTeamName (String teamname)
     {
         if (teamname==null){return R.drawable.no_icon;}
         switch (teamname)
         { //This is the set of icons that are currently in the app. Feel free to find and add more
             //as you go.
-            case "Arsenal London FC" : return R.drawable.arsenal;
+            case "Arsenal FC" : return R.drawable.arsenal;
             case "Manchester United FC" : return R.drawable.manchester_united;
-            case "Swansea City" : return R.drawable.swansea_city_afc;
-            case "Leicester City" : return R.drawable.leicester_city_fc_hd_logo;
+            case "Swansea City FC" : return R.drawable.swansea_city_afc;
+            case "Leicester City FC" : return R.drawable.leicester_city_fc_hd_logo;
             case "Everton FC" : return R.drawable.everton_fc_logo1;
             case "West Ham United FC" : return R.drawable.west_ham;
             case "Tottenham Hotspur FC" : return R.drawable.tottenham_hotspur;
             case "West Bromwich Albion" : return R.drawable.west_bromwich_albion_hd_logo;
             case "Sunderland AFC" : return R.drawable.sunderland;
             case "Stoke City FC" : return R.drawable.stoke_city;
+            case "Manchester City FC" : return R.drawable.manchester_city;
+            case "Chelsea FC" : return R.drawable.chelsea;
+            case "Aston Villa FC" : return R.drawable.aston_villa;
+            case "Liverpool FC" : return R.drawable.liverpool;
+            case "Southampton FC" : return R.drawable.southampton_fc;
+            case "Newcastle United FC" : return R.drawable.newcastle_united;
+
             default: return R.drawable.no_icon;
         }
     }
