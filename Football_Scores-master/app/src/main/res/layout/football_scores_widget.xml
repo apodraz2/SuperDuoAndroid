@@ -18,11 +18,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-
-            tools:src="@drawable/manchester_city"/>
+            />
 
         <TextView
-            android:id="@+id/widget_favorite_team_name"
+            android:id="@+id/widget_home_team_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="sans-serif"
+            android:textAppearance="?android:textAppearanceLarge"
+            tools:text="48"/>
+
+        <TextView
+            android:id="@+id/widget_home_team_score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
