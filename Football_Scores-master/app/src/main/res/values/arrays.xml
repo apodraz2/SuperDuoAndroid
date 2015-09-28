@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="pref_favorites_options">
+        <item>@string/league_premier</item>
+        <item>@string/league_bundesliga</item>
+        <item>@string/league_champions</item>
+        <item>@string/league_primera_division</item>
+        <item>@string/league_serie_a</item>
+    </string-array>
+
+    <string-array name="pref_favorites_values">
+        <item>@string/league_premier</item>
+        <item>@string/league_bundesliga</item>
+        <item>@string/league_champions</item>
+        <item>@string/league_primera_division</item>
+        <item>@string/league_serie_a</item>
+    </string-array>
+</resources>

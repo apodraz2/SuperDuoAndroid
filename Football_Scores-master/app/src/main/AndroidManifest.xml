@@ -23,7 +23,7 @@
         </activity>
 
         <provider
-            android:name=".ScoresProvider"
+            android:name=".data.ScoresProvider"
             android:authorities="barqsoft.footballscores" />
 
         <activity
@@ -34,21 +34,31 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="barqsoft.footballscores.MainActivity" />
         </activity>
+        <activity
+            android:name=".FavoriteActivity"
+            android:label="Choose Your Favorite League"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="barqsoft.footballscores.MainActivity" />
+        </activity>
 
         <service android:name=".service.MyFetchService" />
 
         <receiver
-            android:name=".FootballScoresWidget"
-            android:label="@string/title_widget_today">
+            android:name=".widget.FootballScoresWidgetProvider"
+            android:label="@string/title_widget_today" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/football_scores_widget_info" />
+                android:resource="@xml/football_scores_widget_provider_info" />
         </receiver>
-        <service android:name=".FootballWidgetIntentService"/>
+
+        <service android:name=".widget.FootballWidgetIntentService" />
+
     </application>
 
 </manifest>

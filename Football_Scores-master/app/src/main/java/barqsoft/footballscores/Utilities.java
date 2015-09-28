@@ -1,24 +1,27 @@
 package barqsoft.footballscores;
 
+import android.content.Context;
+
 /**
  * Created by yehya khaled on 3/3/2015.
  */
-public class Utilies
+public class Utilities
 {
     public static final int SERIE_A = 357;
     public static final int PREMIER_LEGAUE = 354;
     public static final int CHAMPIONS_LEAGUE = 362;
     public static final int PRIMERA_DIVISION = 358;
     public static final int BUNDESLIGA = 351;
-    public static String getLeague(int league_num)
+
+    public static String getLeague(Context context, int league_num)
     {
         switch (league_num)
         {
-            case SERIE_A : return "Seria A";
-            case PREMIER_LEGAUE : return "Premier League";
-            case CHAMPIONS_LEAGUE : return "UEFA Champions League";
-            case PRIMERA_DIVISION : return "Primera Division";
-            case BUNDESLIGA : return "Bundesliga";
+            case SERIE_A : return context.getString(R.string.league_serie_a);
+            case PREMIER_LEGAUE : return context.getString(R.string.league_premier);
+            case CHAMPIONS_LEAGUE : return context.getString(R.string.league_champions);
+            case PRIMERA_DIVISION : return context.getString(R.string.league_primera_division);
+            case BUNDESLIGA : return context.getString(R.string.league_bundesliga);
             default: return "Not known League Please report";
         }
     }

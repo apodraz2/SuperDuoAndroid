@@ -59,6 +59,12 @@ public class MainActivity extends ActionBarActivity {
             return true;
         }
 
+        if(id == R.id.action_choose_favorite_league) {
+            Intent startFavorite = new Intent(this, FavoriteActivity.class);
+            startActivity(startFavorite);
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

@@ -3,8 +3,8 @@
     android:minWidth="@dimen/simple_widget_default_width"
     android:minHeight="@dimen/simple_widget_default_height"
     android:updatePeriodMillis="0"
-    android:initialLayout="@layout/football_scores_widget"
+    android:previewImage="@drawable/example_appwidget_preview"
+    android:initialLayout="@layout/football_scores_widget_provider"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen"
-    android:initialKeyguardLayout="@layout/football_scores_widget"
-    ></appwidget-provider>
+    android:initialKeyguardLayout="@layout/football_scores_widget_provider"></appwidget-provider>
