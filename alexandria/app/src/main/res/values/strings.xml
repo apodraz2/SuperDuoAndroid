@@ -38,4 +38,10 @@
     <string name="book_added">Book was added to your library.</string>
     <string name="book_not_added">Book was not added to your library.</string>
     <string name="book_deleted">Book was deleted from your inventory.</string>
+
+    <string name="missing_book_title">Book Title Was Not Accessible</string>
+    <string name="missing_book_subtitle">Book Subtitle Was Not Accessible</string>
+    <string name="missing_book_description">Book Description Was Not Accessible</string>
+    <string name="missing_book_author">Book Authors Were Not Accessible</string>
+    <string name="missing_book_category">Book Category Was Not Accessible</string>
 </resources>
