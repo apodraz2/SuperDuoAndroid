@@ -3,6 +3,7 @@ package barqsoft.footballscores.widget;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -42,6 +43,8 @@ public class FootballScoresWidgetProvider extends AppWidgetProvider {
     private static int homeGoals;
     private static int awayGoals;
 
+
+
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
@@ -56,6 +59,11 @@ public class FootballScoresWidgetProvider extends AppWidgetProvider {
     @Override
     public void onEnabled(Context context) {
         // Enter relevant functionality for when the first widget is created
+
+        //AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+
+
+        //updateAppWidget(context, appWidgetManager, 0);
     }
 
     @Override
@@ -65,6 +73,8 @@ public class FootballScoresWidgetProvider extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
+
+        //Log.d(LOG_TAG, "updateAppWidget");
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
